@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phat Jerry's Phillies – Coming Soon</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --green:#6DC020; --white:#FFFFFF; --red:#CC1A00; --black:#080808; }
+    html, body { height:100%; background:var(--black); color:var(--white); font-family:'Arial Black',Arial,sans-serif; overflow-x:hidden; }
+    body::before {
+      content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+      background:
+        radial-gradient(ellipse 180px 80px at 8% 12%, rgba(109,192,32,.18) 0%,transparent 70%),
+        radial-gradient(ellipse 120px 55px at 92% 8%, rgba(109,192,32,.14) 0%,transparent 70%),
+        radial-gradient(ellipse 90px 45px at 75% 88%, rgba(204,26,0,.18) 0%,transparent 70%),
+        radial-gradient(ellipse 200px 90px at 20% 90%, rgba(109,192,32,.12) 0%,transparent 70%);
+    }
+    body::after {
+      content:''; position:fixed; inset:0; pointer-events:none; z-index:1;
+      background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.08) 3px,rgba(0,0,0,.08) 4px);
+    }
+    .page { position:relative; z-index:2; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 20px 60px; }
+    /* Logo */
+    .logo-wrap { width:min(360px,88vw); height:min(360px,88vw); border-radius:50%; overflow:hidden; flex-shrink:0; animation:neon-pulse 3s ease-in-out infinite; }
+    .logo-wrap img { width:100%; height:100%; object-fit:cover; display:block; border-radius:50%; }
+    @keyframes neon-pulse {
+      0%,100% { box-shadow:0 0 50px rgba(109,192,32,.6),0 0 100px rgba(109,192,32,.25); }
+      50%      { box-shadow:0 0 70px rgba(109,192,32,.85),0 0 130px rgba(109,192,32,.4); }
+    }
+    /* Construction */
+    .construction { margin-top:38px; text-align:center; }
+    .construction-label { display:inline-block; font-size:clamp(11px,3vw,14px); font-weight:900; letter-spacing:4px; text-transform:uppercase; color:var(--black); background:var(--green); padding:6px 22px; clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%); box-shadow:0 0 20px rgba(109,192,32,.6); }
+    .construction-title { margin-top:18px; font-size:clamp(28px,9vw,52px); font-weight:900; text-transform:uppercase; line-height:1.05; }
+    .line-white { color:var(--white); }
+    .line-green { color:var(--green); text-shadow:0 0 10px rgba(109,192,32,.8),0 0 30px rgba(109,192,32,.4); }
+    .line-red { color:var(--red); font-size:clamp(22px,7vw,42px); text-shadow:0 0 10px rgba(204,26,0,.7); }
+    .construction-sub { margin-top:12px; font-size:clamp(13px,3.5vw,16px); color:rgba(255,255,255,.55); letter-spacing:1px; }
+    /* Divider */
+    .divider { width:min(480px,90vw); height:2px; margin:36px auto; background:linear-gradient(90deg,transparent,var(--green),var(--red),var(--green),transparent); box-shadow:0 0 8px rgba(109,192,32,.5); }
+    /* Cards */
+    .contact-grid { display:flex; flex-wrap:wrap; gap:24px; justify-content:center; align-items:flex-start; }
+    .card { background:rgba(255,255,255,.04); border:1.5px solid rgba(109,192,32,.3); border-radius:12px; padding:28px 32px; text-align:center; min-width:200px; box-shadow:0 0 20px rgba(109,192,32,.08); transition:border-color .3s,box-shadow .3s; }
+    .card:hover { border-color:rgba(109,192,32,.7); box-shadow:0 0 30px rgba(109,192,32,.2); }
+    .card-icon { font-size:32px; margin-bottom:10px; }
+    .card-label { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--green); margin-bottom:8px; }
+    .card-value { font-size:clamp(17px,4.5vw,22px); font-weight:900; color:var(--white); letter-spacing:1px; }
+    .card-value a { color:inherit; text-decoration:none; transition:color .2s; }
+    .card-value a:hover { color:var(--green); }
+    .card-note { margin-top:8px; font-size:11px; color:rgba(255,255,255,.4); }
+    .insta-card { display:flex; flex-direction:column; align-items:center; }
+    .insta-btn { display:inline-flex; align-items:center; gap:8px; margin-top:14px; padding:10px 22px; border:2px solid var(--green); border-radius:50px; color:var(--green); text-decoration:none; font-size:13px; font-weight:900; letter-spacing:1px; text-transform:uppercase; box-shadow:0 0 12px rgba(109,192,32,.3); transition:background .25s,color .25s,box-shadow .25s; }
+    .insta-btn:hover { background:var(--green); color:var(--black); box-shadow:0 0 24px rgba(109,192,32,.6); }
+    .qr-wrap { margin-top:16px; padding:10px; background:var(--white); border-radius:10px; box-shadow:0 0 18px rgba(109,192,32,.4); display:inline-block; }
+    #qr-canvas canvas,#qr-canvas img { display:block; width:150px !important; height:150px !important; }
+    .qr-hint { margin-top:8px; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.35); }
+    footer { margin-top:52px; text-align:center; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,.2); }
+    footer span { color:var(--red); }
+    .splatter { position:fixed; pointer-events:none; z-index:0; }
+    .splatter-tl { top:-30px; left:-30px; width:220px; opacity:.18; }
+    .splatter-br { bottom:-30px; right:-30px; width:260px; opacity:.14; transform:rotate(180deg); }
+  </style>
+</head>
+<body>
+
+  <svg class="splatter splatter-tl" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="60" cy="60" rx="55" ry="38" fill="#6DC020" transform="rotate(-25 60 60)"/>
+    <ellipse cx="120" cy="30" rx="22" ry="12" fill="#6DC020" transform="rotate(15 120 30)"/>
+    <ellipse cx="30" cy="130" rx="18" ry="9" fill="#6DC020" transform="rotate(-40 30 130)"/>
+    <circle cx="150" cy="70" r="8" fill="#6DC020"/>
+    <circle cx="90" cy="10" r="5" fill="#6DC020"/>
+  </svg>
+
+  <svg class="splatter splatter-br" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="60" cy="60" rx="55" ry="38" fill="#CC1A00" transform="rotate(-25 60 60)"/>
+    <ellipse cx="120" cy="30" rx="22" ry="12" fill="#CC1A00" transform="rotate(15 120 30)"/>
+    <ellipse cx="30" cy="130" rx="18" ry="9" fill="#6DC020" transform="rotate(-40 30 130)"/>
+    <circle cx="150" cy="70" r="8" fill="#CC1A00"/>
+    <circle cx="90" cy="10" r="5" fill="#6DC020"/>
+  </svg>
+
+  <div class="page">
+
+    <!-- LOGO: logo.png must be in the same folder as this index.html -->
+    <div class="logo-wrap">
+      <img src="logo.png" alt="Phat Jerry's Phillies Logo" />
+    </div>
+
+    <div class="construction">
+      <div class="construction-label">🚧 &nbsp;Coming Soon&nbsp; 🚧</div>
+      <div class="construction-title">
+        <div class="line-white">WEBSITE</div>
+        <div class="line-green">UNDER</div>
+        <div class="line-red">CONSTRUCTION!</div>
+      </div>
+      <div class="construction-sub">Something delicious is on the way. Stay tuned!</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="contact-grid">
+
+      <div class="card">
+        <div class="card-icon">📞</div>
+        <div class="card-label">Call Us</div>
+        <div class="card-value"><a href="tel:+19164874677">(916) 487-4677</a></div>
+        <div class="card-note">We'd love to hear from you</div>
+      </div>
+
+      <div class="card insta-card">
+        <div class="card-icon">📸</div>
+        <div class="card-label">Send Us a Message</div>
+        <div class="card-value">@phatjerrysphillies</div>
+        <a class="insta-btn" href="https://www.instagram.com/phatjerrysphillies/" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+          DM on Instagram
+        </a>
+        <div class="qr-wrap">
+          <div id="qr-canvas"></div>
+        </div>
+        <div class="qr-hint">Scan to visit our page</div>
+      </div>
+
+    </div>
+
+    <footer>
+      <p>&copy; 2025 <span>Phat Jerry's Phillies</span> &nbsp;·&nbsp; Sacramento, CA</p>
+      <p style="margin-top:6px">The Capital's Best Philly Cheese Steak</p>
+    </footer>
+  </div>
+
+  <script>
+    new QRCode(document.getElementById("qr-canvas"), {
+      text: "https://www.instagram.com/phatjerrysphillies/",
+      width: 150, height: 150,
+      colorDark: "#000000", colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  </script>
+</body>
+</html>
